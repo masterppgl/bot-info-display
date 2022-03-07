@@ -1,0 +1,12 @@
+.product{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+}
+.form__input{
+    max-width: 300px;
+}
+
+.range{
+    max-width: 300px;
+}
