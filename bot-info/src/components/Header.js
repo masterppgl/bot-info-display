@@ -1,13 +1,25 @@
-import React,{useState} from 'react'
-import {Navbar,Container,NavDropdown,Nav,Modal,Button,Table }from 'react-bootstrap'
-import './Header.css'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import {
+  Navbar,
+  Container,
+  NavDropdown,
+  Nav,
+  Modal,
+  Button,
+  Table,
+} from "react-bootstrap";
+import "./Header.css";
+import { Link } from "react-router-dom";
+import { InputGroup, FormControl } from "react-bootstrap";
 
 const Header = () => {
   const [show, setShow] = useState(false);
+  const [addShop, setAddShop] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleShopClose = () => setAddShop(false);
+  const handleShopShow = () => setAddShop(true);
   return (
     <div>
       <Navbar bg="light" expand="lg">
@@ -20,13 +32,58 @@ const Header = () => {
             <Nav className="me-auto">
               <Nav.Link className="active__shop">Active Shop</Nav.Link>
               <NavDropdown title="Available Shops" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Shop 0</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Shop 1</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Shop 2</NavDropdown.Item>
+                <NavDropdown.Item>Shop 0</NavDropdown.Item>
+                <NavDropdown.Item>Shop 1</NavDropdown.Item>
+                <NavDropdown.Item>Shop 2</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  <Button variant="primary">Add a shop</Button>
-                  
+                <NavDropdown.Item>
+                  <Button variant="primary" onClick={handleShopShow}>
+                    Add a shop
+                  </Button>
+                  <Modal show={addShop} onHide={handleShopClose}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Add a shop</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <InputGroup size="sm" className="mb-3">
+                        <InputGroup.Text id="inputGroup-sizing-sm">
+                          Name
+                        </InputGroup.Text>
+                        <FormControl
+                          aria-label="Small"
+                          aria-describedby="inputGroup-sizing-sm"
+                        />
+                      </InputGroup>{" "}
+                      <br />
+                      <InputGroup size="sm" className="mb-3">
+                        <InputGroup.Text id="inputGroup-sizing-sm">
+                          User ID
+                        </InputGroup.Text>
+                        <FormControl
+                          aria-label="Small"
+                          aria-describedby="inputGroup-sizing-sm"
+                        />
+                      </InputGroup>
+                      <br />
+                      <InputGroup size="sm" className="mb-3">
+                        <InputGroup.Text id="inputGroup-sizing-sm">
+                          API KEY
+                        </InputGroup.Text>
+                        <FormControl
+                          aria-label="Small"
+                          aria-describedby="inputGroup-sizing-sm"
+                        />
+                      </InputGroup>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="success" >
+                        Add
+                      </Button>
+                      <Button variant="warning" onClick={handleShopClose}>
+                        Close
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
@@ -64,6 +121,6 @@ const Header = () => {
       </Navbar>
     </div>
   );
-}
+};
 
-export default Header
+export default Header;
