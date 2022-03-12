@@ -1,8 +1,8 @@
 import React from 'react'
-import Header from './Header'
-import BotTable from './BotTable'
-import Product from './Product'
-import ErrorLog from './ErrorLog'
+import Header from '../components/Header'
+import BotTable from '../components/BotTable'
+import Product from '../components/Product'
+import ErrorLog from '../components/ErrorLog'
 
 const BotInfo = () => {
   return (

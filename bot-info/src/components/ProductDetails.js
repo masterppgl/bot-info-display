@@ -28,12 +28,12 @@ const ProductDetails = () => {
             <InputGroup.Text id="price_interval">
               Price Interval
             </InputGroup.Text>
-            <FormControl placeholder="100$" />
+            <FormControl placeholder="Price Interval" value="100"/>
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
-            <InputGroup.Text id="name">Name</InputGroup.Text>
-            <FormControl placeholder="Demo Product" />
+            <InputGroup.Text id="name" >Name</InputGroup.Text>
+            <FormControl placeholder="Name" value = "Demo Product"/>
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
