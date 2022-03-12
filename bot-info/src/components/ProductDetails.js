@@ -13,7 +13,7 @@ const ProductDetails = () => {
           alt=""
           className="product__image"
         />
-        <span className="details">
+        <div className="details">
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="SKU">SKU</InputGroup.Text>
             <FormControl placeholder="143515151361" />
@@ -61,7 +61,7 @@ const ProductDetails = () => {
             <FormControl placeholder="google.com" disabled />
           </InputGroup>
           <br />
-        </span>
+        </div>
         <div className="update__save">
           <Button variant="success" className="update">Update</Button>
           <Button variant="danger" className="save">Save</Button>

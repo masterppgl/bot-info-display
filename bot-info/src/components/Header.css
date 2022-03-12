@@ -1,9 +1,18 @@
-.notification{
-    margin-right: 40px;
+.notification {
+  margin-right: 40px;
 }
-.active__shop{
-    font-weight: bold;
+.active__shop {
+  font-weight: bold;
 }
-.fa-bell{
-    cursor: pointer;
+.fa-bell {
+  cursor: pointer;
+}
+.badge {
+  position: relative;
+  top: 15px;
+  left: -15px;
+  color: red;
+  background-color: bisque;
+  border-radius: 50px;
+  font-size: 12px;
 }
