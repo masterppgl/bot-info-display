@@ -1,15 +1,18 @@
 .product {
-  margin-top: 10px;
-  align-items: stretch;
-  width: 100%;
-  margin: 50px;
-  padding: 10px;
   display: flex;
   flex-direction: row;
-  align-self: start;
+  align-items: center;
+  margin-top: 50px;
 }
 .form__input {
   max-width: 300px;
+}
+.input__style{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 350px;
+  margin-bottom: 100px;
 }
 
 .form__range {
@@ -23,4 +26,8 @@
 
 .input__field {
   min-height: 50px;
+}
+
+.delete__shop{
+  margin-left: 10px;
 }

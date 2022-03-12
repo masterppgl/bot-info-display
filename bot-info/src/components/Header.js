@@ -32,9 +32,24 @@ const Header = () => {
             <Nav className="me-auto">
               <Nav.Link className="active__shop">Active Shop</Nav.Link>
               <NavDropdown title="Available Shops" id="basic-nav-dropdown">
-                <NavDropdown.Item>Shop 0</NavDropdown.Item>
-                <NavDropdown.Item>Shop 1</NavDropdown.Item>
-                <NavDropdown.Item>Shop 2</NavDropdown.Item>
+                <NavDropdown.Item>
+                  Shop 0
+                  <Button variant="danger" size="sm" className="delete__shop">
+                    Delete
+                  </Button>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  Shop 1
+                  <Button variant="danger" size="sm" className="delete__shop">
+                    Delete
+                  </Button>
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  Shop 2
+                  <Button variant="danger" size="sm" className="delete__shop">
+                    Delete
+                  </Button>
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item>
                   <Button variant="primary" onClick={handleShopShow}>
@@ -76,9 +91,7 @@ const Header = () => {
                       </InputGroup>
                     </Modal.Body>
                     <Modal.Footer>
-                      <Button variant="success" >
-                        Add
-                      </Button>
+                      <Button variant="success">Add</Button>
                       <Button variant="warning" onClick={handleShopClose}>
                         Close
                       </Button>

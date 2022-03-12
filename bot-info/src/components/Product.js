@@ -8,7 +8,7 @@ const Product = () => {
   const [price, setPrice] = useState(0);
   return (
     <div className="product">
-      <InputGroup className="mb-3">
+      <InputGroup className="input__style">
         <InputGroup.Text id="inputGroup-sizing-default">SKU</InputGroup.Text>
         <FormControl
           aria-label="Default"

@@ -1,5 +1,7 @@
 import React from "react";
-import './ProductDetails.css'
+import "./ProductDetails.css";
+import { InputGroup,Button } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 
 const ProductDetails = () => {
   return (
@@ -12,26 +14,58 @@ const ProductDetails = () => {
           className="product__image"
         />
         <span className="details">
-          <h5>SKU:</h5>
-          <p>41235122353255</p>
-          <h5>Time Interval</h5>
-          <p>10 miutes</p>
-          <h5>Price Interval</h5>
-          <p>100$</p>
-          <h5>Name:</h5>
-          <p>Demo</p>
-          <h5>Available</h5>
-          <p>Yes</p>
-          <h5>Visibility</h5>
-          <p>Visible</p>
-          <h5>Variation</h5>
-          <p>23</p>
-          <h5>Active</h5>
-          <p>Yes</p>
-          <h5>Url</h5>
-          <p><a href="google.com">link</a></p>
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="SKU">SKU</InputGroup.Text>
+            <FormControl placeholder="143515151361" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="time_interval">Time Interval</InputGroup.Text>
+            <FormControl placeholder="20 minutes" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="price_interval">
+              Price Interval
+            </InputGroup.Text>
+            <FormControl placeholder="100$" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="name">Name</InputGroup.Text>
+            <FormControl placeholder="Demo Product" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="available">Available</InputGroup.Text>
+            <FormControl placeholder="Yes" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="visibility">Visibilty</InputGroup.Text>
+            <FormControl placeholder="Visible" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="variation">Variation</InputGroup.Text>
+            <FormControl placeholder="23" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="active">Active</InputGroup.Text>
+            <FormControl placeholder="Yes" />
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="url">URL</InputGroup.Text>
+            <FormControl placeholder="google.com" disabled />
+          </InputGroup>
+          <br />
         </span>
-
+        <div className="update__save">
+          <Button variant="success" className="update">Update</Button>
+          <Button variant="danger" className="save">Save</Button>
+        </div>
       </div>
     </div>
   );
