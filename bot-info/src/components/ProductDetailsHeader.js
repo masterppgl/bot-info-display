@@ -32,7 +32,7 @@ const ProductDetailsHeader = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link className="active__shop">Active Shop</Nav.Link>
+              <Nav.Link className="active__shop">{contextStore.store.name ? contextStore.store.name : "Active Store"}</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -43,9 +43,15 @@ const Header = () => {
     }
     const onClickDeleteButton = (id) => {
         if (contextStore.socket) {
+            if(id === contextStore.store._id){
+              setContextStore({...contextStore, store: {}})
+            }
             contextStore.socket.emit("deleteStore", { id });
         }
     };
+    const onClickSelectStore = (store) => {
+       setContextStore({...contextStore, store})
+    }
     useEffect(() => {
         if (contextStore.socket) {
             contextStore.socket.on("stores", (stores) => {
@@ -67,11 +73,23 @@ const Header = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link className="active__shop">Active Shop</Nav.Link>
+                <Nav.Link className="active__shop">{contextStore.store.name? contextStore.store.name: "Active Shop"}</Nav.Link>
                 <NavDropdown title="Available Shops" id="basic-nav-dropdown">
                   {contextStore.stores.map((store) => (
                     <NavDropdown.Item>
                       {store.name}
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        className="delete__shop"
+                        onClick = {
+                          () => {
+                            onClickSelectStore(store)
+                          }
+                        }
+                      >
+                        Select
+                      </Button>
                       <Button
                         variant="danger"
                         size="sm"
@@ -82,16 +100,17 @@ const Header = () => {
                       >
                         Delete
                       </Button>
+                      
                     </NavDropdown.Item>
                   ))}
                   <NavDropdown.Divider />
                   <NavDropdown.Item>
                     <Button variant="primary" onClick={handleShopShow}>
-                      Add a shop
+                      Add a Store
                     </Button>
                     <Modal show={addShop} onHide={handleShopClose}>
                       <Modal.Header closeButton>
-                        <Modal.Title>Add a shop</Modal.Title>
+                        <Modal.Title>Add a Store</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
                         <InputGroup size="sm" className="mb-3">

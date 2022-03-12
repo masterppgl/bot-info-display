@@ -25,6 +25,7 @@ function App() {
   }, [])
   const [contextStore, setContextStore] = useState({
     stores: [],
+    store: {},
     socket: null
   })
   return (
