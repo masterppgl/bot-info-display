@@ -17,8 +17,18 @@ const Header = () => {
   const [show, setShow] = useState(false);
   const [addShop, setAddShop] = useState(false);
   const { contextStore, setContextStore } = useContext(ContextStore);
+  const [notificationCount, setNotificationCount] = useState(0)
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setShow(true)
+    setNotificationCount(0)
+    contextStore.storeNotifications.map(storeNotification => {
+      if(!storeNotification.viewStatus){
+        contextStore.socket.emit("editStoreNotificationToViewed", {storeNotificationId: storeNotification._id})
+      }
+      
+    })
+  };
   const handleShopClose = () => setAddShop(false);
   const handleShopShow = () => setAddShop(true);
   const [formData, setFormData] = useState({
@@ -41,28 +51,106 @@ const Header = () => {
   const onChangeFormData = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const onClickDeleteButton = (id) => {
+  const onClickDeleteButton = (storeId) => {
     if (contextStore.socket) {
-      if (id === contextStore.store._id) {
-        setContextStore({ ...contextStore, store: {} });
+      if (storeId === contextStore.store._id) {
+        setContextStore(prev => ({
+          ...prev,
+          store: {}
+        }));
       }
-      contextStore.socket.emit("deleteStore", { id });
+      contextStore.socket.emit("deleteStore", { storeId });
     }
   };
   const onClickSelectStore = (store) => {
-    setContextStore({ ...contextStore, store });
+    console.log(contextStore)
+    setContextStore(prev => ({
+      ...prev,
+      store
+    }));
   };
   useEffect(() => {
-    if (contextStore.socket) {
-      contextStore.socket.on("stores", (stores) => {
+    if (contextStore.socket.connected) {
+      const stores =  (stores) => {
         console.log(stores);
         if (!stores.error) {
-          setContextStore({ ...contextStore, stores });
+          setContextStore(prev => ({
+            ...prev,
+            stores
+          }));
+          
         }
-      });
+      }
+      contextStore.socket.on("stores",stores);
+      
+      
       contextStore.socket.emit("getStores");
+      return () => {
+        contextStore.socket.removeEventListener("stores", stores)
+      }
     }
-  }, [contextStore.socket]);
+  }, [contextStore.socket.connected]);
+  useEffect(() => {
+    setNotificationCount(0)
+    const storeNotifications = (storeNotifications) => {
+      console.log(storeNotifications)
+      if(!storeNotifications.error){
+        // console.log(contextStore)
+        setContextStore(prev=> ({
+          ...prev,
+          storeNotifications
+        }))
+      }
+    }
+    const storeErrors = (storeErrors) => {
+      console.log(storeErrors)
+      if(!storeErrors.error){
+        setContextStore(prev =>({
+          ...prev,
+          storeErrors
+        }))
+      }
+    }
+    const storeProcesses = (storeProcesses) => {
+      console.log(storeProcesses)
+      if(!storeProcesses.error){
+        setContextStore(prev => ({
+          ...prev,
+          storeProcesses
+        })) 
+      }
+    } 
+    if(contextStore.store._id){
+      contextStore.socket.on(`storeProcesses${contextStore.store._id}`, storeProcesses)
+      contextStore.socket.on(`storeNotifications${contextStore.store._id}`, storeNotifications)
+      contextStore.socket.on(`storeErrors${contextStore.store._id}`, storeErrors)
+      contextStore.socket.emit("getStoreNotifications", {storeId: contextStore.store._id})
+      contextStore.socket.emit("getStoreErrors", {storeId: contextStore.store._id})
+      contextStore.socket.emit("getStoreProcesses", {storeId: contextStore.store._id})
+    }
+    else {
+      setContextStore(prev => ({
+        ...prev,
+        storeNotifications: []
+      }))
+      
+    }
+    return () => {
+      if(contextStore.store._id){
+        contextStore.socket.removeEventListener(`storeNotifications${contextStore.store._id}`, storeNotifications)
+        contextStore.socket.removeEventListener(`storeErrors${contextStore.store._id}`, storeErrors)
+        contextStore.socket.removeEventListener(`storeProcesses${contextStore.store._id}`,storeProcesses)
+      }
+    }
+  }, [contextStore.store]);
+
+  useEffect(() => {
+    contextStore.storeNotifications.map(storeNotification => {
+      if(!storeNotification.viewStatus){
+        setNotificationCount(past => past + 1)
+      }
+    })
+  },[contextStore.storeNotifications])
   return (
     <div>
       <Navbar bg="light" expand="lg">
@@ -170,7 +258,7 @@ const Header = () => {
         </Container>
         <div className="notification">
           <i class="fa-solid fa-bell fa-xl" onClick={handleShow}>
-            <span className="badge">3</span>
+            <span className="badge">{notificationCount}</span>
           </i>
           <Modal
             className="notification__modal"
@@ -190,10 +278,12 @@ const Header = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>hello</td>
-                    <td>10.54</td>
+                  {contextStore.storeNotifications.map(storeNotification => (
+                    <tr>
+                    <td>{storeNotification.message}</td>
+                    <td>{storeNotification.time}</td>
                   </tr>
+                  ))}
                   {/* <tr>
                     <td>hello</td>
                     <td>10.54</td>

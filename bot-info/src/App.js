@@ -26,7 +26,10 @@ function App() {
   const [contextStore, setContextStore] = useState({
     stores: [],
     store: {},
-    socket: null
+    storeNotifications: [],
+    storeErrors: [],
+    storeProcesses: [],
+    socket: {connected:false}
   })
   return (
     <BrowserRouter>
