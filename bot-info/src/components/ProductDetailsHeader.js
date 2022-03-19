@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   Navbar,
   Container,
@@ -17,11 +17,68 @@ const ProductDetailsHeader = () => {
   const [show, setShow] = useState(false);
   const [addShop, setAddShop] = useState(false);
   const {contextStore, setContextStore} = useContext(ContextStore)
-  const {stores} = contextStore
+  const [notificationCount, setNotificationCount] = useState(0)
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const handleShopClose = () => setAddShop(false);
-  const handleShopShow = () => setAddShop(true);
+  const handleShow = () => {
+    setShow(true);
+    setNotificationCount(0)
+    contextStore.processNotifications.map(processNotification => {
+      if(!processNotification.viewStatus){
+        contextStore.socket.emit("editProcessNotificationToViewed", {processNotificationId: processNotification._id})
+      }
+    })
+  }
+  useEffect(() => {
+    setNotificationCount(0)
+    const processNotifications = (processNotifications) => {
+      console.log(processNotifications)
+      if(!processNotifications.error){
+        setContextStore(prev => ({
+          ...prev,
+          processNotifications
+        }))
+      }
+    }
+    const processErrors = (processErrors) => {
+      console.log(processErrors)
+      if(!processErrors.error){
+        setContextStore(prev => ({
+          ...prev,
+          processErrors
+        }))
+      }
+    }
+    const getProcess = (storeProcess) => {
+      console.log(storeProcess)
+      if(!storeProcess.error){
+        setContextStore(prev => ({
+          ...prev,
+          storeProcess
+        }))
+      }
+    }
+    if(contextStore.storeProcess._id){
+      contextStore.socket.on(`processNotifications${contextStore.storeProcess._id}`, processNotifications)
+      contextStore.socket.on(`processErrors${contextStore.storeProcess._id}`, processErrors)
+      contextStore.socket.on(`storeProcess${contextStore.storeProcess._id}`, getProcess)
+
+      contextStore.socket.emit("getProcessNotifications", {processId: contextStore.storeProcess._id})
+      contextStore.socket.emit("getProcessErrors", {processId: contextStore.storeProcess._id})
+      return () => {
+        contextStore.socket.removeEventListener(`processNotifications${contextStore.storeProcess._id}`, processNotifications)
+        contextStore.socket.removeEventListener(`processErrors${contextStore.storeProcess._id}`, processErrors)
+        contextStore.socket.removeEventListener(`storeProcess${contextStore.storeProcess._id}`, getProcess)
+      }
+
+    }
+  }, [])
+  useEffect(() => {
+    contextStore.processNotifications.map(processNotification => {
+      if(!processNotification.viewStatus){
+        setNotificationCount(past => past + 1)
+      }
+    })
+  },[contextStore.processNotifications])
   return (
     <div>
       <Navbar bg="light" expand="lg">
@@ -38,7 +95,7 @@ const ProductDetailsHeader = () => {
         </Container>
         <div className="notification">
             <i class="fa-solid fa-bell fa-xl" onClick={handleShow}>
-              <span className="badge">3</span>
+              <span className="badge">{notificationCount}</span>
             </i>
             <Modal show={show} onHide={handleClose}>
               <Modal.Header closeButton>
@@ -53,10 +110,12 @@ const ProductDetailsHeader = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>154</td>
-                      <td>10.53</td>
+                    {contextStore.processNotifications.map(processNotification => 
+                      <tr>
+                      <td>{processNotification.message}</td>
+                      <td>{processNotification.time}</td>
                     </tr>
+                    )}
                   </tbody>
                 </Table>
               </Modal.Body>

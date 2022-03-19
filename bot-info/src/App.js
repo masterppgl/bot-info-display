@@ -29,6 +29,9 @@ function App() {
     storeNotifications: [],
     storeErrors: [],
     storeProcesses: [],
+    storeProcess: [],
+    processNotifications: [],
+    processErrors: [],
     socket: {connected:false}
   })
   return (

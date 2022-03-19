@@ -1,70 +1,113 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./ProductDetails.css";
 import { InputGroup,Button } from "react-bootstrap";
 import { FormControl } from "react-bootstrap";
-
+import ContextStore from "../Context/ContextStore";
+import RangeSlider from "react-bootstrap-range-slider";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 const ProductDetails = () => {
+  const navigate = useNavigate()
+  const {contextStore, setContextStore} = useContext(ContextStore)
+
+  const onChangeSlider = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value})
+  }
+  const [formData, setFormData] = useState({
+    ...contextStore.storeProcess, timeInterval: parseInt(contextStore.storeProcess.timeInterval/60000 )
+  })
+  const onClickCancel = () => {
+    navigate("/")
+  }
+  const onClickUpdate = () => {
+    console.log(formData)
+    contextStore.socket.emit("restartProcess", {...formData, timeInterval: formData.timeInterval * 60000})
+    navigate("/")
+  }
+  useEffect(() => {
+      if(!contextStore.storeProcess._id){
+        navigate("/")
+      }
+  },[])
+  
   return (
     <div>
       <div className="product__details">
         <h1>Product Name</h1>
         <img
-          src="https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmlld3xlbnwwfHwwfHw%3D&w=1000&q=80"
+          src={formData.image}
           alt=""
           className="product__image"
         />
         <div className="details">
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="SKU">SKU</InputGroup.Text>
-            <FormControl placeholder="143515151361" />
+            <FormControl placeholder="143515151361" value={formData.sku} />
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="time_interval">Time Interval</InputGroup.Text>
-            <FormControl placeholder="20 minutes" />
+            <RangeSlider
+          min={1}
+          max={120}
+            name = "timeInterval"
+            value={formData.timeInterval}
+            onChange = {onChangeSlider}
+          />
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="price_interval">
               Price Interval
             </InputGroup.Text>
-            <FormControl placeholder="Price Interval" value="100"/>
+            <RangeSlider
+          min={0.01}
+          max={20}
+            name="priceInterval"
+            step={0.01}
+            value={formData.priceInterval}
+            onChange = {onChangeSlider}
+          />
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="name" >Name</InputGroup.Text>
-            <FormControl placeholder="Name" value = "Demo Product"/>
+            <FormControl placeholder="Name" value = {formData.name}/>
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="available">Available</InputGroup.Text>
-            <FormControl placeholder="Yes" />
-          </InputGroup>
-          <br />
-          <InputGroup size="sm" className="mb-3">
-            <InputGroup.Text id="visibility">Visibilty</InputGroup.Text>
-            <FormControl placeholder="Visible" />
+            <FormControl placeholder="Yes" value = {formData.available}/>
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="variation">Variation</InputGroup.Text>
-            <FormControl placeholder="23" />
+            <FormControl placeholder="23" value = {formData.variation}/>
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
             <InputGroup.Text id="active">Active</InputGroup.Text>
-            <FormControl placeholder="Yes" />
+            <FormControl placeholder="Yes" value = {formData.active}/>
           </InputGroup>
           <br />
           <InputGroup size="sm" className="mb-3">
-            <InputGroup.Text id="url">URL</InputGroup.Text>
-            <FormControl placeholder="google.com" disabled />
+            <InputGroup.Text id="active">Current Price</InputGroup.Text>
+            <FormControl placeholder="Yes" value = {formData.currentPrice}/>
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="active">Lower Bound</InputGroup.Text>
+            <FormControl placeholder="Please Put in an Integer" value = {formData.lowerBound} name = "lowerBound" onChange = {onChangeSlider}/>
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+           <a href={formData.url}><InputGroup.Text id="url">URL</InputGroup.Text></a>
+            <FormControl placeholder="google.com" disabled value = {formData.url}/>
           </InputGroup>
           <br />
         </div>
         <div className="update__save">
-          <Button variant="success" className="update">Update</Button>
-          <Button variant="danger" className="save">Save</Button>
+          <Button variant="success" className="update" onClick={onClickUpdate}>Update</Button>
+          <Button variant="danger" className="save" onClick={onClickCancel}>Cancel</Button>
         </div>
       </div>
     </div>

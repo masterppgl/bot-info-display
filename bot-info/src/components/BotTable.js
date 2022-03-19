@@ -10,6 +10,18 @@ const BotTable = () => {
     const onClickXmark = (processId) => {
         contextStore.socket.emit("stopProcess", {processId})
     }
+    const onClickDeleteMark = (processId) => {
+        contextStore.socket.emit("deleteProcess", {processId, storeId: contextStore.store._id})
+    }
+    const onClickProductDetailsLink = (storeProcess) => {
+        setContextStore(prev => ({
+            ...prev,
+            storeProcess
+        }))
+    }
+    const onClickCheckMark = (storeProcess) => {
+        contextStore.socket.emit("restartProcess", {...storeProcess})
+    }
     return (
         <div>
             <h1>Bot Table</h1>
@@ -26,7 +38,7 @@ const BotTable = () => {
                                     placeholder="SKU"
                                 />
                             </th>
-                            <th>Time Interval</th>
+                            <th>Time Interval In Minutes</th>
                             <th>Price Interval</th>
                             <th>Lower Bound</th>
                             <th>
@@ -48,9 +60,9 @@ const BotTable = () => {
                         {contextStore.storeProcesses.map((storeProcess) => (
                             <tr>
                                 <td>
-                                    <Link to="product-details">{storeProcess.sku}</Link>
+                                    <Link to="product-details" onClick={() => {onClickProductDetailsLink(storeProcess)}}>{storeProcess.sku}</Link>
                                 </td>
-                                <td>{storeProcess.timeInterval}</td>
+                                <td>{parseInt(storeProcess.timeInterval)/60000}</td>
                                 <td>{storeProcess.priceInterval}</td>
                                 <td>{storeProcess.lowerBound}</td>
                                 <td>
@@ -58,9 +70,9 @@ const BotTable = () => {
                                     {!storeProcess.active && <i className="fa-solid fa-circle inactive"></i>}
                                 </td>
                                 <td>
-                                    {!storeProcess.active && <i className="fa-solid fa-circle-check"></i>}
+                                    {!storeProcess.active && <i className="fa-solid fa-circle-check" onClick = {() => {onClickCheckMark(storeProcess)}}></i>}
                                     {storeProcess.active && <i className="fa-solid fa-circle-xmark" onClick={() => {onClickXmark(storeProcess._id)}}></i>}
-                                    <i class="fa-solid fa-trash"></i>
+                                    <i class="fa-solid fa-trash" onClick={() => {onClickDeleteMark(storeProcess._id)}}></i>
                                 </td>
                             </tr>
                         ))}

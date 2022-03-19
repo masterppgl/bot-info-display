@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./ErrorLog.css";
 import { Table } from "react-bootstrap";
+import ContextStore from "../Context/ContextStore";
 
 const ErrorLog = ({ data }) => {
+    const {contextStore, setContextStore} = useContext(ContextStore)
     return (
         <div className="error__log">
             <h1>Error Log</h1>
