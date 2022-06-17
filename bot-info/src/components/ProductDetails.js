@@ -20,7 +20,8 @@ const ProductDetails = () => {
   }
   const onClickUpdate = () => {
     console.log(formData)
-    contextStore.socket.emit("restartProcess", {...formData, timeInterval: formData.timeInterval * 60000})
+    contextStore.socket.emit(`deleteProcess${formData._id}`)
+    contextStore.socket.emit("createStoreProcess", {...formData})
     navigate("/")
   }
   useEffect(() => {
@@ -61,7 +62,7 @@ const ProductDetails = () => {
             </InputGroup.Text>
             <RangeSlider
           min={0.01}
-          max={20}
+          max={50}
             name="priceInterval"
             step={0.01}
             value={formData.priceInterval}
@@ -99,6 +100,17 @@ const ProductDetails = () => {
             <FormControl placeholder="Please Put in an Integer" value = {formData.lowerBound} name = "lowerBound" onChange = {onChangeSlider}/>
           </InputGroup>
           <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="active">String Column</InputGroup.Text>
+            <FormControl placeholder="Yes" name = "stringColumn" value = {formData.stringColumn} onChange = {onChangeSlider}/>
+          </InputGroup>
+          <br />
+          <InputGroup size="sm" className="mb-3">
+            <InputGroup.Text id="active">Number Column(Must Be a Number)</InputGroup.Text>
+            <FormControl placeholder="Yes" name = "numberColumn" value = {formData.numberColumn} onChange = {onChangeSlider}/>
+          </InputGroup>
+          <br />
+          
           <InputGroup size="sm" className="mb-3">
            <a href={formData.url}><InputGroup.Text id="url">URL</InputGroup.Text></a>
             <FormControl placeholder="google.com" disabled value = {formData.url}/>

@@ -4,6 +4,8 @@ import { FormControl, Form, Button } from "react-bootstrap";
 import "./Product.css";
 import RangeSlider from "react-bootstrap-range-slider";
 import ContextStore from "../Context/ContextStore";
+import dispatch from "../dispatch/dispatch";
+import actions from "../dispatch/actions";
 const Product = () => {
   const {contextStore, setContextStore} = useContext(ContextStore)
   const [formData, setFormData] = useState({
@@ -15,9 +17,11 @@ const Product = () => {
   const onChangeFormData = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value})
   }
-  const onClickSubmitButton = () => {
+  const onClickSubmitButton = async () => {
     if(contextStore.store._id){
-      contextStore.socket.emit("createStoreProcess", {sku: formData.sku, timeInterval: formData.timeInterval*60*1000, priceInterval: formData.priceInterval, lowerBound: formData.lowerBound, storeId: contextStore.store._id})
+      contextStore.setShowSpinner(true)
+      const response = await dispatch(actions.createStoreProcess, {}, {sku: formData.sku, timeInterval: parseInt(formData.timeInterval)*60*1000, priceInterval: formData.priceInterval, lowerBound: formData.lowerBound, storeId: contextStore.store._id})
+      contextStore.setShowSpinner(false)
     }
   }
   return (
@@ -46,8 +50,9 @@ const Product = () => {
         <div className="form__range">
           <Form.Label>Price Change Interval</Form.Label>
           <RangeSlider
+          size="lg"
           min={0.01}
-          max={20}
+          max={50}
             name="priceInterval"
             step={0.01}
             value={formData.priceInterval}

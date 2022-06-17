@@ -22,11 +22,8 @@ const ProductDetailsHeader = () => {
   const handleShow = () => {
     setShow(true);
     setNotificationCount(0)
-    contextStore.processNotifications.map(processNotification => {
-      if(!processNotification.viewStatus){
-        contextStore.socket.emit("editProcessNotificationToViewed", {processNotificationId: processNotification._id})
-      }
-    })
+    let processNotifications = contextStore.processNotifications.filter(storeNotification => !storeNotification.viewStatus)
+    contextStore.socket.emit("editStoreNotificationToViewed", {processNotifications})
   }
   useEffect(() => {
     setNotificationCount(0)
@@ -73,6 +70,9 @@ const ProductDetailsHeader = () => {
     }
   }, [])
   useEffect(() => {
+    contextStore.processNotifications.sort(function(a,b){
+      return new Date(b.time) -  new Date(a.time)
+    })
     contextStore.processNotifications.map(processNotification => {
       if(!processNotification.viewStatus){
         setNotificationCount(past => past + 1)
