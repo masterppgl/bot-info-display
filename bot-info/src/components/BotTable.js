@@ -42,6 +42,20 @@ const BotTable = () => {
             }))
         }
     }
+    const onClickAll = () => {
+        setSelectedProcesses(storeProcesses)
+        setStoreProcesses(storeProcesses.map(storeProcess => {
+            storeProcess.checked = true
+            return storeProcess
+        }))
+    }
+    const onClickNone = () => {
+        setSelectedProcesses([])
+        setStoreProcesses(storeProcesses.map(storeProcess => {
+            storeProcess.checked = false
+            return storeProcess
+        }))
+    }
     const onClickXmark = async (processId) => {
         contextStore.setShowSpinner(true)
         await dispatch(actions.stopStoreProcess, {id: processId})
@@ -161,6 +175,9 @@ const BotTable = () => {
                         <tr>
                             <th>
                                 Select
+                                <br />
+                                <Button variant="success" onClick={onClickAll} style={{padding: 0, paddingLeft: 2, paddingRight: 2}} disabled={!contextStore.store._id}>All</Button>
+                                <Button variant="danger" onClick={onClickNone} style={{padding: 0, paddingLeft: 2, paddingRight: 2}} disabled={!contextStore.store._id}>None</Button>
                             </th>
                             <th>
                                 SKU{" "}
