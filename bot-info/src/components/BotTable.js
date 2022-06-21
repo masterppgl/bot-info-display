@@ -190,7 +190,18 @@ const BotTable = () => {
                                     onChange={handleSearchChange}
                                 />
                             </th>
-                            <th>Time Interval In Minutes</th>
+                            <th>Time Interval In Minutes
+                            <Form.Select
+                                    size="sm"
+                                    aria-label="Default select example"
+                                    className="sort__option"
+                                    onChange = {(e) => {sortProcesses("timeInterval", e.target.value)}}
+                                >
+                                    <option>sort</option>
+                                    <option value="ascending" onSelect={() => {sortProcesses("timeInterval", "ascending")}}>Ascending</option>
+                                    <option value="descending" onSelect={() => {sortProcesses("timeInterval", "descending")}}>Descending</option>
+                                </Form.Select>
+                            </th>
                             <th>Price Interval
                             <Form.Select
                                     size="sm"
